@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Item Details</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>Item Details</h1>
+</header>
+<main>
+    <div th:if="${item != null}">
+        <h2 th:text="${item.name}"></h2>
+        <p th:text="'Price: $' + ${item.price}"></p>
+        <p th:text="${item.description}"></p>
+        <p th:text="'Available Quantity: ' + ${item.quantity}"></p>
+        <form th:action="@{/cart/add/{itemId}(itemId=${item.id})}" method="post">
+            <input type="hidden" name="cartId" value="1"/> <!-- Example cart ID -->
+            <button type="submit" class="button">Add to Cart</button>
+        </form>
+        <a href="/items" class="button">Back to Items</a>
+    </div>
+</main>
+</body>
+</html>

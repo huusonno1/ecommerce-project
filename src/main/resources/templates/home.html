@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>Welcome to the Home Page</h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/items}">Items</a></li> <!-- Link to items page -->
+            <li><a th:href="@{/cart/view?cartId=1}">Cart</a></li> <!-- Example link to view the cart -->
+            <li><a th:href="@{/order/place?cartId=1}">Orders</a></li> <!-- Example link to place an order -->
+        </ul>
+    </nav>
+</header>
+<main>
+    <section>
+        <h2>Items</h2>
+        <div th:if="${items != null}">
+            <ul th:each="item : ${items}">
+                <li>
+                    <span th:text="${item.name}"></span> -
+                    <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a> <!-- Link to item details -->
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>Cart</h2>
+        <div th:if="${cart != null}">
+            <p th:text="'Items in cart: ' + ${cart.totalQuantity}"></p>
+            <p th:text="'Total price: $' + ${cart.totalPrice}"></p>
+            <a th:href="@{/cart/view?cartId=1}" class="button">View Cart</a> <!-- Link to cart.html -->
+        </div>
+    </section>
+
+    <section>
+        <h2>Orders</h2>
+        <div th:if="${orders != null}">
+            <ul th:each="order : ${orders}">
+                <li>
+                    <span th:text="'Order ID: ' + ${order.id}"></span> -
+                    <a th:href="@{/order/place?cartId=1}" class="button">Place New Order</a> <!-- Example order link -->
+                </li>
+            </ul>
+        </div>
+    </section>
+</main>
+</body>
+</html>

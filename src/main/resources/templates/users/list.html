@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Users List</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>Users List</h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/users}">Users</a></li>
+            <li><a th:href="@{/items}">Items</a></li>
+            <li><a th:href="@{/cart}">Cart</a></li>
+            <li><a th:href="@{/orders}">Orders</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <h2>All Registered Users</h2>
+    <a th:href="@{/users/create}" class="button">Create New User</a>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.fullName.firstName} + ' ' + ${user.fullName.lastName}"></td>
+            <td th:text="${user.email}"></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<footer>
+    <p>&copy; 2024 E-Commerce Platform. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

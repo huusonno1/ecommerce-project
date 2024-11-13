@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create User</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <h1>Create New User</h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/users}">Users</a></li>
+            <li><a th:href="@{/items}">Items</a></li>
+            <li><a th:href="@{/cart}">Cart</a></li>
+            <li><a th:href="@{/orders}">Orders</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <form th:action="@{/users}" th:object="${user}" method="post">
+        <div>
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" th:field="*{fullName.firstName}" required/>
+        </div>
+        <div>
+            <label for="midName">Middle Name:</label>
+            <input type="text" id="midName" th:field="*{fullName.midName}"/>
+        </div>
+        <div>
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" th:field="*{fullName.lastName}" required/>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required/>
+        </div>
+        <div>
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}"/>
+        </div>
+        <button type="submit">Create User</button>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2024 E-Commerce Platform. All Rights Reserved.</p>
+</footer>
+</body>
+</html>
