@@ -1,14 +1,14 @@
 package ecom.demoecom.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
-public class Item {
+public abstract class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +17,9 @@ public class Item {
     private double price;
     private int quantity;
     private String description;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     // Getters and setters
 }

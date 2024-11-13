@@ -1,7 +1,9 @@
 package ecom.demoecom.controller;
 
 import ecom.demoecom.entity.Account;
+import ecom.demoecom.entity.User;
 import ecom.demoecom.repo.AccountRepository;
+import ecom.demoecom.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,8 @@ public class AccountController {
 
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     // Display the registration form
     @GetMapping("/register")
@@ -33,6 +37,10 @@ public class AccountController {
 
         // Save the user details if the username is unique
         accountRepository.save(account);
+
+        User user = new User();
+        user.setAccount(account);
+        userRepository.save(user);
         return "redirect:/login"; // Redirect to the login page
     }
 
