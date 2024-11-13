@@ -1,17 +1,60 @@
 package ecom.demoecom.controller;
 
-import ecom.demoecom.entity.Item;
+import ecom.demoecom.entity.*;
 import ecom.demoecom.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class ItemController {
 
+    @Autowired
+    private ItemService itemService;
 
+    // Lấy danh sách tất cả các Item
+    @GetMapping("/items-list")
+    public String listItems(Model model) {
+        List<Item> items = itemService.getAllItems();
+        model.addAttribute("items", items);
+        return "items/listItems"; // Tên của template là listItem.html
+    }
+
+    // Lấy danh sách các sản phẩm Book
+    @GetMapping("/items/book")
+    public String listBooks(Model model) {
+        List<Book> books = itemService.getBooks();
+        model.addAttribute("items", books);
+        return "items/listItems"; // Tên của template là listItem.html, tái sử dụng để hiển thị Books
+    }
+
+    // Lấy danh sách Laptop
+    @GetMapping("/items/laptop")
+    public String listLaptops(Model model) {
+        List<Laptop> laptops = itemService.getLaptops();
+        model.addAttribute("items", laptops);
+        return "items/listItems"; // Tái sử dụng template listItems.html
+    }
+
+    // Lấy danh sách Clothes
+    @GetMapping("/items/clothes")
+    public String listClothes(Model model) {
+        List<Clothes> clothes = itemService.getClothes();
+        model.addAttribute("items", clothes);
+        return "items/listItems"; // Tái sử dụng template listItems.html
+    }
+
+    // Lấy danh sách Shoes
+    @GetMapping("/items/shoes")
+    public String listShoes(Model model) {
+        List<Shoes> shoes = itemService.getShoes();
+        model.addAttribute("items", shoes);
+        return "items/listItems"; // Tái sử dụng template listItems.html
+    }
+
+    // Tương tự, bạn có thể thêm các phương thức cho Laptop, Clothes, Shoes
+    // @GetMapping("/items/laptop")...
 }

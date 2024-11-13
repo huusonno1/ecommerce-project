@@ -1,6 +1,7 @@
 package ecom.demoecom.service;
 
-import ecom.demoecom.entity.Item;
+import ecom.demoecom.entity.*;
+
 import java.util.List;
 
 public interface ItemService {
@@ -8,4 +9,9 @@ public interface ItemService {
     Item getItemById(Long id);
 
     void saveItem(Item item);
+
+    List<Book> getBooks();
+    List<Clothes> getClothes();
+    List<Laptop> getLaptops();
+    List<Shoes> getShoes();
 }

@@ -1,5 +1,6 @@
 package ecom.demoecom.controller;
 
+import ecom.demoecom.dto.RegistrationForm;
 import ecom.demoecom.entity.Account;
 import ecom.demoecom.entity.User;
 import ecom.demoecom.repo.AccountRepository;
@@ -20,13 +21,15 @@ public class AccountController {
     // Display the registration form
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("account", new Account());
+        model.addAttribute("registrationForm", new RegistrationForm());
         return "account/register"; // Path to the registration template
     }
 
     // Handle registration form submission
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute Account account, Model model) {
+    public String registerUser(@ModelAttribute RegistrationForm registrationForm, Model model) {
+        Account account = registrationForm.getAccount();
+        User user = registrationForm.getUser();
         // Check if the username already exists in the database
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
         if (existingAccount != null) {
@@ -38,7 +41,6 @@ public class AccountController {
         // Save the user details if the username is unique
         accountRepository.save(account);
 
-        User user = new User();
         user.setAccount(account);
         userRepository.save(user);
         return "redirect:/login"; // Redirect to the login page

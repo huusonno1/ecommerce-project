@@ -2,53 +2,80 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Home Page</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/home.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<header>
-    <h1>Welcome to the Home Page</h1>
-    <nav>
-        <ul>
-            <li><a th:href="@{/home}">Home</a></li>
-            <li><a th:href="@{/items}">Items</a></li> <!-- Link to items page -->
-            <li><a th:href="@{/cart/view?cartId=1}">Cart</a></li> <!-- Example link to view the cart -->
-            <li><a th:href="@{/order/place?cartId=1}">Orders</a></li> <!-- Example link to place an order -->
-        </ul>
-    </nav>
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <i class="fas fa-shopping-bag"></i>
+            Ecommerce
+        </div>
+        <nav>
+            <i class="fas fa-user"></i>
+        </nav>
+    </div>
 </header>
-<main>
-    <section>
-        <h2>Items</h2>
-        <div th:if="${items != null}">
-            <ul th:each="item : ${items}">
-                <li>
-                    <span th:text="${item.name}"></span> -
-                    <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a> <!-- Link to item details -->
-                </li>
-            </ul>
-        </div>
-    </section>
 
-    <section>
-        <h2>Cart</h2>
-        <div th:if="${cart != null}">
-            <p th:text="'Items in cart: ' + ${cart.totalQuantity}"></p>
-            <p th:text="'Total price: $' + ${cart.totalPrice}"></p>
-            <a th:href="@{/cart/view?cartId=1}" class="button">View Cart</a> <!-- Link to cart.html -->
-        </div>
-    </section>
+<section class="hero">
+    <h1>Welcome to Ecommerce Shop</h1>
+</section>
 
-    <section>
-        <h2>Orders</h2>
-        <div th:if="${orders != null}">
-            <ul th:each="order : ${orders}">
-                <li>
-                    <span th:text="'Order ID: ' + ${order.id}"></span> -
-                    <a th:href="@{/order/place?cartId=1}" class="button">Place New Order</a> <!-- Example order link -->
-                </li>
-            </ul>
+<div class="container">
+    <div class="quick-actions">
+        <!-- Thẻ hành động dẫn đến trang hiển thị sản phẩm Book -->
+        <a th:href="@{/items-list}" class="action-card" methods="GET">
+            <i class="fas fa-store"></i>
+            <h3>Browse Books</h3>
+            <p>Explore our wide range of books</p>
+        </a>
+
+        <!-- Thẻ hành động dẫn đến trang giỏ hàng -->
+        <a th:href="@{/cart/view}" class="action-card">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Your Cart</h3>
+            <p>View and manage your shopping cart</p>
+        </a>
+
+        <!-- Thẻ hành động dẫn đến trang đặt hàng -->
+        <a th:href="@{/orders}" class="action-card">
+            <i class="fas fa-box"></i>
+            <h3>Orders</h3>
+            <p>Track your orders and view history</p>
+        </a>
+    </div>
+</div>
+
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>10k+</h3>
+                <p>Happy Customers</p>
+            </div>
+            <div class="stat-item">
+                <h3>5k+</h3>
+                <p>Products</p>
+            </div>
+            <div class="stat-item">
+                <h3>99%</h3>
+                <p>Satisfaction Rate</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Customer Support</p>
+            </div>
         </div>
-    </section>
-</main>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 Ecommerce Shop. All rights reserved.</p>
+    </div>
+</footer>
+
 </body>
 </html>

@@ -21,5 +21,21 @@ public abstract class Item {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    public boolean isBook() {
+        return this instanceof Book;
+    }
+
+    public boolean isLaptop() {
+        return this instanceof Laptop;
+    }
+
+    public boolean isClothes() {
+        return this instanceof Clothes;
+    }
+
+    public boolean isShoes() {
+        return this instanceof Shoes;
+    }
+
     // Getters and setters
 }

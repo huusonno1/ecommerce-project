@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a class="logo" th:href="@{/home}">
+            <i class="fas fa-shopping-bag"></i>
+            Ecommerce
+        </a>
+    </div>
+</header>
+
+<section class="container">
+    <h1>Product List</h1>
+    <div class="product-list">
+        <div th:if="${items != null && !items.isEmpty()}">
+            <ul>
+                <li th:each="item : ${items}">
+                    <!-- Hiển thị sản phẩm Book -->
+                    <div th:if="${item instanceof T(ecom.demoecom.entity.Book)}">
+                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Book Image" style="width: 100px; height: auto;">
+                        <strong>Book:</strong>
+                        <span th:text="${item.name}"></span> -
+                        <span th:text="'Author: ' + ${item.author}"></span> -
+                        <span th:text="'Type: ' + ${item.bookType}"></span> -
+                        <span th:text="'Publisher: ' + ${item.publisher}"></span>
+                        <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                    </div>
+
+                    <!-- Hiển thị sản phẩm Laptop -->
+                    <div th:if="${item instanceof T(ecom.demoecom.entity.Laptop)}">
+                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Laptop Image" style="width: 100px; height: auto;">
+                        <strong>Laptop:</strong>
+                        <span th:text="${item.name}"></span> -
+                        <span th:text="'Producer: ' + ${item.laptopProducer}"></span> -
+                        <span th:text="'Type: ' + ${item.laptopType}"></span>
+                        <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                    </div>
+
+                    <!-- Hiển thị sản phẩm Clothes -->
+                    <div th:if="${item instanceof T(ecom.demoecom.entity.Clothes)}">
+                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Clothes Image" style="width: 100px; height: auto;">
+                        <strong>Clothes:</strong>
+                        <span th:text="${item.name}"></span> -
+                        <span th:text="'Type: ' + ${item.clothesType}"></span> -
+                        <span th:text="'Producer: ' + ${item.clothesProducer}"></span> -
+                        <span th:text="'Size: ' + ${item.clothesSize}"></span>
+                        <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                    </div>
+
+                    <!-- Hiển thị sản phẩm Shoes -->
+                    <div th:if="${item instanceof T(ecom.demoecom.entity.Shoes)}">
+                        <img th:src="${item.image}" alt="Shoes Image" style="width: 100px; height: auto;">
+                        <strong>Shoes:</strong>
+                        <span th:text="${item.name}"></span> -
+                        <span th:text="'Type: ' + ${item.shoesType}"></span> -
+                        <span th:text="'Producer: ' + ${item.shoesProducer}"></span> -
+                        <span th:text="'Size: ' + ${item.shoesSize}"></span>
+                        <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Hiển thị thông báo nếu không có sản phẩm nào -->
+        <div th:if="${items == null || items.isEmpty()}">
+            <p>No items available.</p>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 Ecommerce Shop. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
