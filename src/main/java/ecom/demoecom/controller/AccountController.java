@@ -5,6 +5,7 @@ import ecom.demoecom.entity.Account;
 import ecom.demoecom.entity.User;
 import ecom.demoecom.repo.AccountRepository;
 import ecom.demoecom.repo.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,14 +55,15 @@ public class AccountController {
 
     // Handle login form submission
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password, Model model) {
+    public String loginUser(@RequestParam String username, @RequestParam String password, Model model, HttpSession session) {
         Account account = accountRepository.findByUsername(username);
         if (account != null && account.getPassword().equals(password)) {
-            // Successful login
-            model.addAttribute("username", account.getUsername());
-            return "redirect:/home"; // Redirect to a welcome page or user dashboard
+            // Successful login: store the username in the session
+            session.setAttribute("username", account.getUsername());
+            session.setAttribute("accountId", account.getId());
+            return "redirect:/home"; // Redirect to the home page or user dashboard
         } else {
-            // Login failed
+            // Login failed: show an error message
             model.addAttribute("error", "Invalid username or password");
             return "account/login"; // Path to the login template with error
         }

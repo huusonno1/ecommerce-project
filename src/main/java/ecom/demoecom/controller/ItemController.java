@@ -2,6 +2,7 @@ package ecom.demoecom.controller;
 
 import ecom.demoecom.entity.*;
 import ecom.demoecom.service.ItemService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,9 @@ public class ItemController {
 
     // Lấy danh sách tất cả các Item
     @GetMapping("/items-list")
-    public String listItems(Model model) {
+    public String listItems(HttpSession session,Model model) {
+        String username = (String) session.getAttribute("username");
+        model.addAttribute("username", username);
         List<Item> items = itemService.getAllItems();
         model.addAttribute("items", items);
         return "items/listItems"; // Tên của template là listItem.html

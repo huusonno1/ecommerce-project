@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Product List</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <title>List Items</title>
+    <link rel="stylesheet" href="/css/items/listItems.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -12,6 +12,22 @@
             <i class="fas fa-shopping-bag"></i>
             Ecommerce
         </a>
+        <!-- Search Bar -->
+        <form th:action="@{/search}" method="get" class="search-form">
+            <input type="text" name="query" placeholder="Search for items..." required>
+            <button type="submit"><i class="fas fa-search"></i></button>
+        </form>
+        <!-- Account and Cart Icons -->
+        <div class="icons">
+            <a th:href="@{/cart}" class="icon-link">
+                <i class="fas fa-shopping-cart"></i> <!-- Cart Icon -->
+            </a>
+            <!-- Account Icon and User Info -->
+            <a th:href="@{/account}" class="icon-link">
+                <i class="fas fa-user"></i> <!-- Account Icon -->
+                <span th:text="${session.username}">Account</span> <!-- Display User's Name -->
+            </a>
+        </div>
     </div>
 </header>
 
@@ -21,7 +37,7 @@
         <div th:if="${items != null && !items.isEmpty()}">
             <ul>
                 <li th:each="item : ${items}">
-                    <!-- Hiển thị sản phẩm Book -->
+                    <!-- Display Book Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Book)}">
                         <img th:src="@{/img/{image}(image=${item.image})}" alt="Book Image" style="width: 100px; height: auto;">
                         <strong>Book:</strong>
@@ -30,9 +46,10 @@
                         <span th:text="'Type: ' + ${item.bookType}"></span> -
                         <span th:text="'Publisher: ' + ${item.publisher}"></span>
                         <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                        <button th:onclick="'addToCart(' + ${item.id} + ', \'' + ${session.accountId} + '\')'" class="add-to-cart">Add to Cart</button>
                     </div>
 
-                    <!-- Hiển thị sản phẩm Laptop -->
+                    <!-- Display Laptop Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Laptop)}">
                         <img th:src="@{/img/{image}(image=${item.image})}" alt="Laptop Image" style="width: 100px; height: auto;">
                         <strong>Laptop:</strong>
@@ -40,9 +57,10 @@
                         <span th:text="'Producer: ' + ${item.laptopProducer}"></span> -
                         <span th:text="'Type: ' + ${item.laptopType}"></span>
                         <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                        <button th:onclick="'addToCart(' + ${item.id} + ', \'' + ${session.accountId} + '\')'" class="add-to-cart">Add to Cart</button>
                     </div>
 
-                    <!-- Hiển thị sản phẩm Clothes -->
+                    <!-- Display Clothes Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Clothes)}">
                         <img th:src="@{/img/{image}(image=${item.image})}" alt="Clothes Image" style="width: 100px; height: auto;">
                         <strong>Clothes:</strong>
@@ -51,23 +69,25 @@
                         <span th:text="'Producer: ' + ${item.clothesProducer}"></span> -
                         <span th:text="'Size: ' + ${item.clothesSize}"></span>
                         <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                        <button th:onclick="'addToCart(' + ${item.id} + ', \'' + ${session.accountId} + '\')'" class="add-to-cart">Add to Cart</button>
                     </div>
 
-                    <!-- Hiển thị sản phẩm Shoes -->
+                    <!-- Display Shoes Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Shoes)}">
-                        <img th:src="${item.image}" alt="Shoes Image" style="width: 100px; height: auto;">
+                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Shoes Image" style="width: 100px; height: auto;">
                         <strong>Shoes:</strong>
                         <span th:text="${item.name}"></span> -
                         <span th:text="'Type: ' + ${item.shoesType}"></span> -
                         <span th:text="'Producer: ' + ${item.shoesProducer}"></span> -
                         <span th:text="'Size: ' + ${item.shoesSize}"></span>
                         <a th:href="@{/items/{itemId}(itemId=${item.id})}">View Details</a>
+                        <button th:onclick="'addToCart(' + ${item.id} + ', \'' + ${session.accountId} + '\')'" class="add-to-cart">Add to Cart</button>
                     </div>
                 </li>
             </ul>
         </div>
 
-        <!-- Hiển thị thông báo nếu không có sản phẩm nào -->
+        <!-- Display message if no items are available -->
         <div th:if="${items == null || items.isEmpty()}">
             <p>No items available.</p>
         </div>
@@ -79,5 +99,43 @@
         <p>&copy; 2024 Ecommerce Shop. All rights reserved.</p>
     </div>
 </footer>
+
+<script>
+    function addToCart(itemId, accountId) {
+        // // Logic to add the item to the cart (can be handled in your JavaScript)
+        // alert("Item " + itemId + accountId + " added to cart!");
+        // Create the data object to send to the backend
+        const cartData = {
+            itemId: itemId,
+            accountId: accountId
+        };
+
+        // Send a POST request to add the item to the cart
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cartData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to add item to cart.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert("Item successfully added to cart!");
+                } else {
+                    alert("Failed to add item to cart.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("An error occurred while adding the item to the cart.");
+            });
+    }
+</script>
 </body>
 </html>
