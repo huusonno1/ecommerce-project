@@ -1,7 +1,7 @@
 package ecom.demoecom.controller;
 
 import ecom.demoecom.entity.Cart;
-import ecom.demoecom.entity.Order;
+import ecom.demoecom.entity.OrderEcommerce;
 import ecom.demoecom.service.CartService;
 import ecom.demoecom.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class OrderController {
     @GetMapping("/order/place")
     public String placeOrder(@RequestParam Long cartId, Model model) {
         Cart cart = cartService.getCartById(cartId);
-        Order order = orderService.placeOrder(cart);
+        OrderEcommerce order = orderService.placeOrder(cart);
         model.addAttribute("order", order);
         return "order-confirmation"; // HTML page to display order confirmation
     }

@@ -1,8 +1,8 @@
 package ecom.demoecom.service;
 
 import ecom.demoecom.entity.Cart;
-import ecom.demoecom.entity.Order;
+import ecom.demoecom.entity.OrderEcommerce;
 
 public interface OrderService {
-    Order placeOrder(Cart cart);
+    OrderEcommerce placeOrder(Cart cart);
 }

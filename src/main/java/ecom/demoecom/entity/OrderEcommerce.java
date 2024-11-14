@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
-public class Order {
+public class OrderEcommerce {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +19,9 @@ public class Order {
     private Cart cart;
     @OneToMany
     private List<Item> items;
+    @Column
     private int totalAmount;
+    @Column
     private double totalPrice;
     private LocalDate date;
     private Long shipmentId;

@@ -1,8 +1,10 @@
 package ecom.demoecom.service.impl;
 
 import ecom.demoecom.entity.Cart;
-import ecom.demoecom.entity.Order;
-import ecom.demoecom.repo.OrderRepository;
+import ecom.demoecom.entity.OrderEcommerce;
+import ecom.demoecom.entity.OrderEcommerce;
+import ecom.demoecom.repo.OrderEcommerceRepository;
+import ecom.demoecom.repo.OrderEcommerceRepository;
 import ecom.demoecom.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,11 +15,11 @@ import java.time.LocalDate;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private OrderRepository orderRepository;
+    private OrderEcommerceRepository orderRepository;
 
     @Override
-    public Order placeOrder(Cart cart) {
-        Order order = new Order();
+    public OrderEcommerce placeOrder(Cart cart) {
+        OrderEcommerce order = new OrderEcommerce();
         order.setItems(cart.getItems());
         order.setTotalPrice(cart.getTotalPrice());
         order.setDate(LocalDate.now());
