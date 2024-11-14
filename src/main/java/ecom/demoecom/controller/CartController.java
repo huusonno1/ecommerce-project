@@ -25,11 +25,15 @@ public class CartController {
     @Autowired
     private CartRepository cartRepository;
 
-    @GetMapping("/cart/view")
-    public String viewCart(@RequestParam Long cartId, Model model) {
+    @GetMapping("/cart/{cartId}")
+    public String viewCart(@PathVariable Long cartId, Model model) {
+        // Fetch cart details using CartService if needed
         Cart cart = cartService.getCartById(cartId);
+
+        // Add attributes to the model
         model.addAttribute("cart", cart);
-        return "cart"; // HTML page to display cart details
+
+        return "cart/cartViews"; // Name of the Thymeleaf template
     }
 
     @PostMapping("/cart/add")

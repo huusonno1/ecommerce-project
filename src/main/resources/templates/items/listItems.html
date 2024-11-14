@@ -19,8 +19,9 @@
         </form>
         <!-- Account and Cart Icons -->
         <div class="icons">
-            <a th:href="@{/cart}" class="icon-link">
+            <a th:href="@{/cart/{cartId}(cartId=${cart.getId()})}" class="icon-link">
                 <i class="fas fa-shopping-cart"></i> <!-- Cart Icon -->
+                <span th:text="'Cart ID: ' + ${cartId}"></span> <!-- Display Cart ID -->
             </a>
             <!-- Account Icon and User Info -->
             <a th:href="@{/account}" class="icon-link">

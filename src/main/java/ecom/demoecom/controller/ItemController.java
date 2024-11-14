@@ -1,6 +1,7 @@
 package ecom.demoecom.controller;
 
 import ecom.demoecom.entity.*;
+import ecom.demoecom.service.CartService;
 import ecom.demoecom.service.ItemService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,22 @@ public class ItemController {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private CartService cartService;
+
     // Lấy danh sách tất cả các Item
     @GetMapping("/items-list")
     public String listItems(HttpSession session,Model model) {
         String username = (String) session.getAttribute("username");
+        Long accountId = (Long) session.getAttribute("accountId");
+        Cart cart = cartService.getCartByAccountId(accountId);
+
+
+        // Add the cartId to the model
+        if (cart != null) {
+            model.addAttribute("cartId", cart.getId());
+            model.addAttribute("cart", cart );
+        }
         model.addAttribute("username", username);
         List<Item> items = itemService.getAllItems();
         model.addAttribute("items", items);

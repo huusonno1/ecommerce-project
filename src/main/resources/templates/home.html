@@ -34,7 +34,7 @@
         </a>
 
         <!-- Thẻ hành động dẫn đến trang giỏ hàng -->
-        <a th:href="@{/cart/view}" class="action-card">
+        <a th:href="@{/cart/{cartId}(cartId=${cart.getId()})}" class="action-card">
             <i class="fas fa-shopping-cart"></i>
             <h3>Your Cart</h3>
             <p>View and manage your shopping cart</p>
