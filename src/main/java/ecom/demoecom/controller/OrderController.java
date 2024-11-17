@@ -19,6 +19,11 @@ public class OrderController {
     @Autowired
     private CartService cartService;
 
+    @GetMapping("/checkout")
+    public String showOrderPage(Model model) {
+        return "checkout";
+    }
+
     @GetMapping("/order/place")
     public String placeOrder(@RequestParam Long cartId, Model model) {
         Cart cart = cartService.getCartById(cartId);

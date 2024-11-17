@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="/css/order/orderView.css">
+    <style>
+        /* Additional styling for clarity */
+        .details-section {
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a class="logo">
+            <i class="fas fa-shopping-bag"></i> Ecommerce
+        </a>
+        <div class="header-icons">
+            <a class="icon-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-id"></span>
+            </a>
+            <a class="icon-link">
+                <i class="fas fa-user"></i>
+                <span class="user-name">Account</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section class="order-container">
+    <h1 class="order-title">Order Summary</h1>
+
+    <!-- Cart Items -->
+    <div class="order-content">
+        <table class="order-table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Product Name</td>
+                <td>1</td>
+                <td>$0.00</td>
+                <td>$0.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Payment Options -->
+    <div class="payment-section">
+        <h2>Payment Method</h2>
+        <label>
+            <select name="paymentMethod" onchange="showPaymentDetails()">
+                <option value="">-- Select Payment Method --</option>
+                <option value="cash">Cash</option>
+                <option value="bank">Bank Transfer</option>
+                <option value="creditCard">Credit Card</option>
+            </select>
+        </label>
+        <div id="cashDetails" class="details-section">
+            <h3>Cash Payment Details</h3>
+            <p>Payment will be made in cash upon delivery.</p>
+        </div>
+        <!-- Bank Transfer Details -->
+        <div id="bankDetails" class="details-section">
+            <h3>Bank Transfer Details</h3>
+            <label for="bankName">Bank Name:</label>
+            <input type="text" id="bankName" name="bankName" placeholder="Enter bank name" />
+
+            <label for="accountNumber">Account Number:</label>
+            <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account number" />
+
+            <p>Transaction Fee: $5.00</p>
+        </div>
+
+        <!-- Credit Card Details -->
+        <div id="creditCardDetails" class="details-section">
+            <h3>Credit Card Details</h3>
+            <label for="cardNumber">Card Number:</label>
+            <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter card number" />
+
+            <label for="cardHolderName">Card Holder Name:</label>
+            <input type="text" id="cardHolderName" name="cardHolderName" placeholder="Enter card holder name" />
+
+            <label for="expiryDate">Expiry Date:</label>
+            <input type="month" id="expiryDate" name="expiryDate" />
+
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" maxlength="3" />
+        </div>
+
+    </div>
+
+    <!-- Shipment Options -->
+    <div class="shipment-section">
+        <h2>Shipment Method</h2>
+        <label>
+            <select name="shipmentMethod" onchange="showShipmentDetails()">
+                <option value="">-- Select Shipment Method --</option>
+                <option value="shipFast">Fast Shipping</option>
+                <option value="shipRegular">Regular Shipping</option>
+                <option value="drone">Drone Delivery</option>
+            </select>
+        </label>
+        <div id="shipFastDetails" class="details-section">
+            <h3>Fast Shipping Details</h3>
+            <p>Express Fee: $10.00</p>
+            <p>Expected Delivery: Within 2 Days</p>
+        </div>
+        <div id="shipRegularDetails" class="details-section">
+            <h3>Regular Shipping Details</h3>
+            <p>Standard Fee: $5.00</p>
+            <p>Expected Delivery: 5-7 Days</p>
+        </div>
+        <div id="droneDetails" class="details-section">
+            <h3>Drone Delivery Details</h3>
+            <p>Weight Limit: 5kg</p>
+            <p>Distance Limit: 20km</p>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary">
+        <p>Total Quantity: <span>0</span></p>
+        <p>Total Price: $<span>0.00</span></p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="order-actions">
+        <button class="button place-order" onclick="placeOrder()">Place Order</button>
+        <button class="button cancel-order" onclick="cancelOrder()">Cancel</button>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 Ecommerce Shop. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    function showPaymentDetails() {
+        // Hide all payment details
+        document.getElementById("cashDetails").style.display = "none";
+        document.getElementById("bankDetails").style.display = "none";
+        document.getElementById("creditCardDetails").style.display = "none";
+
+        // Show the selected payment details
+        const paymentMethod = document.querySelector('select[name="paymentMethod"]').value;
+        if (paymentMethod === "cash") {
+            document.getElementById("cashDetails").style.display = "block";
+        } else if (paymentMethod === "bank") {
+            document.getElementById("bankDetails").style.display = "block";
+        } else if (paymentMethod === "creditCard") {
+            document.getElementById("creditCardDetails").style.display = "block";
+        }
+    }
+
+    function showShipmentDetails() {
+        // Hide all shipment details
+        document.getElementById("shipFastDetails").style.display = "none";
+        document.getElementById("shipRegularDetails").style.display = "none";
+        document.getElementById("droneDetails").style.display = "none";
+
+        // Show the selected shipment details
+        const shipmentMethod = document.querySelector('select[name="shipmentMethod"]').value;
+        if (shipmentMethod === "shipFast") {
+            document.getElementById("shipFastDetails").style.display = "block";
+        } else if (shipmentMethod === "shipRegular") {
+            document.getElementById("shipRegularDetails").style.display = "block";
+        } else if (shipmentMethod === "drone") {
+            document.getElementById("droneDetails").style.display = "block";
+        }
+    }
+
+    function placeOrder() {
+        console.log("Order has been placed.");
+        // Logic to send order data to the backend
+    }
+
+    function cancelOrder() {
+        console.log("Order has been canceled.");
+        // Logic to handle order cancellation
+    }
+</script>
+</body>
+</html>

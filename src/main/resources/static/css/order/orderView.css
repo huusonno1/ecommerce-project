@@ -1,0 +1,198 @@
+/* Reset basic styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+.header {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.header-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.icon-link {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    transition: color 0.3s;
+}
+
+.icon-link i {
+    margin-right: 8px;
+}
+
+.icon-link:hover {
+    color: #adb5bd;
+}
+
+/* Order Container Styles */
+.order-container {
+    flex: 1; /* Makes the order container expand to fill available space */
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.order-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.order-content {
+    margin-bottom: 20px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-table th, .order-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.order-table th {
+    background-color: #f1f1f1;
+}
+
+/* Payment and Shipment Sections */
+.payment-section, .shipment-section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Details Section */
+.details-section {
+    display: none;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+/* Order Summary Styles */
+.order-summary {
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.order-summary p {
+    margin: 5px 0;
+}
+
+/* Action Buttons */
+.order-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+}
+
+.place-order {
+    background-color: #28a745;
+    transition: background-color 0.3s;
+}
+
+.place-order:hover {
+    background-color: #218838;
+}
+
+.cancel-order {
+    background-color: #dc3545;
+    transition: background-color 0.3s;
+}
+
+.cancel-order:hover {
+    background-color: #c82333;
+}
+input[type="text"],
+input[type="number"],
+input[type="month"] {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+/* Footer Styles */
+/* Footer Styles */
+.footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 14px;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
