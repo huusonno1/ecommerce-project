@@ -17,8 +17,6 @@ public class OrderEcommerce {
     private User user;
     @OneToOne
     private Cart cart;
-    @OneToMany
-    private List<Item> items;
     @Column
     private int totalAmount;
     @Column

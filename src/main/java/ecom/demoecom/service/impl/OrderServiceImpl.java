@@ -3,6 +3,7 @@ package ecom.demoecom.service.impl;
 import ecom.demoecom.dto.OrderRequest;
 import ecom.demoecom.entity.Cart;
 import ecom.demoecom.entity.OrderEcommerce;
+import ecom.demoecom.entity.User;
 import ecom.demoecom.repo.OrderEcommerceRepository;
 import ecom.demoecom.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEcommerce placeOrder(Cart cart) {
         OrderEcommerce order = new OrderEcommerce();
-        order.setItems(cart.getItems());
         order.setTotalPrice(cart.getTotalPrice());
         order.setDate(LocalDate.now());
         order.setStatus("Placed");
@@ -45,5 +45,34 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean cancelOrder(Long orderId) {
         return false;
+    }
+
+    @Override
+    public void addNewOrder(User user, Cart cart) {
+        OrderEcommerce order = new OrderEcommerce();
+        order.setUser(user);
+        order.setCart(cart);
+        order.setDate(LocalDate.now());
+        order.setStatus("pending");
+        order.setTotalAmount(cart.getTotalQuantity());
+        order.setTotalPrice(cart.getTotalPrice());
+        order.setShippingAddress(user.getAddress().getHomeAddress());
+
+        orderRepository.save(order);
+    }
+
+    @Override
+    public boolean orderExistsForCart(Long cartId) {
+        OrderEcommerce orderEcommerce = null;
+        orderEcommerce = orderRepository.findByCartId(cartId);
+        if(orderEcommerce != null){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public OrderEcommerce getOrderBy(Long userId, Long cartId) {
+        return orderRepository.findByUserAndCart(userId, cartId);
     }
 }

@@ -69,7 +69,13 @@
         </div>
 
         <div class="cart-actions">
-            <button class="button checkout" onclick="checkout()">Checkout</button>
+            <form th:action="@{/checkout}" method="post" id="checkoutForm">
+                <input type="hidden" name="accountId" th:value="${session.accountId}"/>
+                <input type="hidden" name="cartId" th:value="${cart.id}"/>
+
+                <button type="submit" class="button checkout">Checkout</button>
+            </form>
+
             <button class="button clear-cart" onclick="clearCart()">Clear Cart</button>
         </div>
     </div>
@@ -96,8 +102,37 @@
     }
 
     function checkout() {
-        window.location.href = "/checkout";
+        // Lấy dữ liệu từ các trường ẩn trong form
+        const accountId = document.querySelector('input[name="accountId"]').value;
+        const cartId = document.querySelector('input[name="cartId"]').value;
+
+        // Tạo một object để gửi dữ liệu
+        const requestData = {
+            accountId: accountId,
+            cartId: cartId
+        };
+
+        // Sử dụng fetch để gửi yêu cầu POST
+        fetch('/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Chuyển hướng đến trang checkout nếu yêu cầu thành công
+                    window.location.href = "/checkout";
+                } else {
+                    console.error('Failed to proceed to checkout');
+                }
+            })
+            .catch(error => {
+                console.error('Error during checkout:', error);
+            });
     }
+
 
     function clearCart() {
         console.log("Clearing the cart");
