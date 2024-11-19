@@ -1,12 +1,9 @@
 package ecom.demoecom.controller;
 
 import ecom.demoecom.dto.OrderRequest;
-import ecom.demoecom.entity.Cart;
-import ecom.demoecom.entity.OrderEcommerce;
-import ecom.demoecom.entity.User;
-import ecom.demoecom.service.CartService;
-import ecom.demoecom.service.OrderService;
-import ecom.demoecom.service.UserService;
+import ecom.demoecom.entity.*;
+import ecom.demoecom.repo.CashRepository;
+import ecom.demoecom.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Files;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,42 +28,139 @@ public class OrderController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CashRepository cashRepository;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private ShipmentService shipmentService;
 
 
     @PostMapping("/checkout")
     public String createOrder(HttpSession session, @RequestParam Long accountId, @RequestParam Long cartId, Model model) {
-        // Lấy thông tin người dùng và giỏ hàng từ session hoặc database
+        // Fetch the user and cart
         User user = userService.getUserByAccountId(accountId);
         Cart cart = cartService.getCartById(cartId);
 
         if (user == null || cart == null) {
-            // Xử lý trường hợp không tìm thấy người dùng hoặc giỏ hàng
             model.addAttribute("errorMessage", "User or cart not found.");
-            return "error"; // Trả về trang lỗi nếu cần
-        }
-        // Kiểm tra xem đơn hàng đã tồn tại hay chưa
-        if (!orderService.orderExistsForCart(cartId)) {
-            // Tạo đơn hàng mới
-            orderService.addNewOrder(user, cart);
+            return "error";
         }
 
-        OrderEcommerce order = orderService.getOrderBy(user.getId(), cart.getId());
+        // Check if an existing order is already present for the user and cart
+        OrderEcommerce order = orderService.findOrderByUserAndCart(user.getId(), cart.getId());
 
-        // Thêm các thuộc tính cần thiết vào model để hiển thị trên trang checkout
-        model.addAttribute("user", user);
-        model.addAttribute("cart", cart);
+        // If no existing order is found, create a new one
+        if (order == null) {
+            order = new OrderEcommerce();
+            order.setUser(user);
+            order.setCart(cart); // Optionally, save the new order
+        }
+
+
+        order.setStatus("pending");
+        order.setShippingAddress(user.getAddress().getHomeAddress());
+        order.setTotalAmount(cart.getTotalQuantity());
+        order.setTotalPrice(cart.getTotalPrice());
+
+        // Add the order to the model
         model.addAttribute("order", order);
-
-        // Trả về trang checkout.html
-        return "checkout";
+        return "checkout";  // Return the checkout page
     }
 
+
+    @PostMapping("/orders/checkout")
+    public String saveOrder(@ModelAttribute("order") OrderEcommerce order,
+                            @RequestParam String paymentType,
+                            @RequestParam String shipmentType,
+                            @RequestParam(required = false) String bankName,
+                            @RequestParam(required = false) String accountNumber,
+                            @RequestParam(required = false) String cardNumber,
+                            @RequestParam(required = false) String cardHolderName,
+                            @RequestParam(required = false) String expiryDate,
+                            @RequestParam(required = false) String cvv) {
+        // Set additional fields if necessary
+        if (order.getDate() == null) {
+            order.setDate(LocalDate.now()); // Set the current date if not already set
+        }
+        if (order.getStatus() == null) {
+            order.setStatus("Pending"); // Set a default status if not already set
+        }
+
+        // Create the appropriate Payment subclass based on the selected payment type
+        Payment payment;
+        switch (paymentType) {
+            case "cash":
+                payment = new Cash();
+                break;
+            case "bank":
+                Bank bank = new Bank();
+                bank.setBankName(bankName);
+                bank.setAccountNumber(accountNumber);
+                payment = bank;
+                break;
+            case "creditCard":
+                CreditCard creditCard = new CreditCard();
+                creditCard.setCardNumber(cardNumber);
+                creditCard.setCardHolderName(cardHolderName);
+                creditCard.setExpiryDate(LocalDate.now());
+                creditCard.setCvv(cvv);
+                payment = creditCard;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid payment type: " + paymentType);
+        }
+        paymentService.savePayment(payment);
+
+        // Create the appropriate Shipment subclass based on the selected shipment type
+        Shipment shipment;
+        switch (shipmentType) {
+            case "shipRegular":
+                shipment = new ShipRegular();
+                break;
+            case "shipFast":
+                shipment = new ShipFast();
+                break;
+            case "drone":
+                shipment = new Drone();
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid shipment type: " + shipmentType);
+        }
+        shipmentService.saveShipment(shipment);
+
+        order.setPaymentId(payment.getId());
+        order.setShipmentId(shipment.getId());
+        // Save the order
+        orderService.saveOrder(order);
+
+        Cart currentCart = order.getCart();
+        currentCart.setStatus("Checked Out"); // Update the status
+        cartService.saveCart(currentCart); // Save the updated cart
+
+        // Create a new, empty cart for the user
+        Cart newCart = new Cart();
+        newCart.setUser(order.getUser());// Associate the new cart with the same user
+        newCart.setStatus("pending");
+        newCart.setLastUpdate(LocalDate.now());
+        cartService.saveNewCart(newCart); // Save the new cart
+
+        return "redirect:/home";
+    }
 
 
     @PostMapping("/place")
     public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
         // Extract details from OrderRequest and place the order
         OrderEcommerce order = orderService.placeOrder(orderRequest);
+
+        return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
+    }
+
+    @PutMapping("/order/place")
+    public ResponseEntity<String> updatePlaceOrder(@RequestBody OrderRequest orderRequest) {
+        // Extract details from OrderRequest and place the order
+        OrderEcommerce order = orderService.updateOrder(orderRequest);
 
         return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
     }

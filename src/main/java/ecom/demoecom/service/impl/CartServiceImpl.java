@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -78,10 +79,11 @@ public class CartServiceImpl implements CartService {
         if(user == null) {
             return null;
         }
-        Cart cart = cartRepository.findByUserId(user.getId());
+        String status = "pending";
+        Cart cart = cartRepository.findByUserIdAndStatus(user.getId(), status);
         if(cart == null){
             cart = new Cart();
-            cart.setStatus("open");
+            cart.setStatus("pending");
             cart.setUser(user);
             cart.setTotalQuantity(0);
             cart.setTotalPrice(0);
@@ -89,5 +91,24 @@ public class CartServiceImpl implements CartService {
             cart = cartRepository.save(cart);
         }
         return cart;
+    }
+
+    @Override
+    public void saveCart(Cart currentCart) {
+        Optional<Cart> cart = cartRepository.findById(currentCart.getId());
+        if(cart.isEmpty()) {
+            return ;
+        }
+        Cart cart1 = cart.get();
+        cart1.setStatus(currentCart.getStatus());
+        if(cart1.getUser() == null) {
+            cart1.setUser(currentCart.getUser());
+        }
+        cartRepository.save(cart1);
+    }
+
+    @Override
+    public void saveNewCart(Cart newCart) {
+        cartRepository.save(newCart);
     }
 }

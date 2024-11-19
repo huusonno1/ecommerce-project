@@ -75,4 +75,30 @@ public class OrderServiceImpl implements OrderService {
     public OrderEcommerce getOrderBy(Long userId, Long cartId) {
         return orderRepository.findByUserAndCart(userId, cartId);
     }
+
+    @Override
+    public OrderEcommerce updateOrder(OrderRequest orderRequest) {
+        OrderEcommerce order = new OrderEcommerce();
+        order.setUser(orderRequest.getUser());
+        order.setCart(orderRequest.getCart());
+        order.setDate(LocalDate.now());
+        order.setStatus(orderRequest.getStatus());
+        order.setTotalAmount(orderRequest.getTotalAmount());
+        order.setTotalPrice(orderRequest.getTotalPrice());
+        order.setShippingAddress(orderRequest.getUser().getAddress().getHomeAddress());
+        order.setPaymentId(1L);
+        order.setShipmentId(1L);
+        orderRepository.save(order);
+        return order;
+    }
+
+    @Override
+    public void saveOrder(OrderEcommerce order) {
+        orderRepository.save(order);
+    }
+
+    @Override
+    public OrderEcommerce findOrderByUserAndCart(Long userId, Long cartId) {
+        return orderRepository.findByUserIdAndCartId(userId, cartId);
+    }
 }

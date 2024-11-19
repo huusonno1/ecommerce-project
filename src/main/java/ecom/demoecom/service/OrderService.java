@@ -18,4 +18,10 @@ public interface OrderService {
     boolean orderExistsForCart(Long cartId);
 
     OrderEcommerce getOrderBy(Long id, Long id1);
+
+    OrderEcommerce updateOrder(OrderRequest orderRequest);
+
+    void saveOrder(OrderEcommerce order);
+
+    OrderEcommerce findOrderByUserAndCart(Long id, Long id1);
 }

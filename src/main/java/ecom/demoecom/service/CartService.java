@@ -10,4 +10,8 @@ public interface CartService {
     void addItemToCart(Long cartId, Long itemId);
 
     Cart getCartByAccountId(Long accountId);
+
+    void saveCart(Cart currentCart);
+
+    void saveNewCart(Cart newCart);
 }

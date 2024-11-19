@@ -19,27 +19,37 @@
 <body>
 <header class="header">
     <div class="header-content">
-        <a class="logo">
+        <a class="logo" th:href="@{/home}">
             <i class="fas fa-shopping-bag"></i> Ecommerce
         </a>
-        <div class="header-icons">
-            <a class="icon-link">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-id"></span>
-            </a>
-            <a class="icon-link">
-                <i class="fas fa-user"></i>
-                <span class="user-name">Account</span>
-            </a>
-        </div>
+<!--        <div class="header-icons">-->
+<!--            &lt;!&ndash; Thêm thông tin giỏ hàng &ndash;&gt;-->
+<!--            <a th:href="@{/cart/{cartId}(cartId=${cart.id})}" class="icon-link">-->
+<!--                <i class="fas fa-shopping-cart"></i>-->
+<!--                <span class="cart-id" th:text="'Cart ID: ' + ${cart.id}">Cart ID</span>-->
+<!--            </a>-->
+<!--            &lt;!&ndash; Thêm thông tin tài khoản người dùng &ndash;&gt;-->
+<!--            <a th:href="@{/account}" class="icon-link">-->
+<!--                <i class="fas fa-user"></i>-->
+<!--                <span class="user-name" th:text="${user.fullName}">Account</span>-->
+<!--            </a>-->
+<!--        </div>-->
     </div>
 </header>
 
-<section class="order-container">
-    <h1 class="order-title">Order Summary</h1>
 
-    <!-- Cart Items -->
-    <div class="order-content">
+<section class="order-container">
+    <h1>Checkout Order</h1>
+    <form th:action="@{/orders/checkout}" th:object="${order}" method="post">
+        <h2>Cart Items</h2>
+
+        <!-- Hidden inputs for User and Cart -->
+        <input type="hidden" th:field="*{user.id}" />
+        <input type="hidden" th:field="*{cart.id}" />
+
+        <!-- Display User Email -->
+        <h2 th:text="${order.user.email}">User Email</h2>
+
         <table class="order-table">
             <thead>
             <tr>
@@ -50,101 +60,84 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Product Name</td>
-                <td>1</td>
-                <td>$0.00</td>
-                <td>$0.00</td>
+            <tr th:each="item : ${order.cart.items}">
+                <td th:text="${item.name}">Product Name</td>
+                <td th:text="${item.quantity}">1</td>
+                <td th:text="'$' + ${item.price}">0.00</td>
+                <td th:text="'$' + (${item.price} * ${item.quantity})">0.00</td>
             </tr>
             </tbody>
         </table>
-    </div>
 
-    <!-- Payment Options -->
-    <div class="payment-section">
-        <h2>Payment Method</h2>
-        <label>
-            <select name="paymentMethod" onchange="showPaymentDetails()">
-                <option value="">-- Select Payment Method --</option>
-                <option value="cash">Cash</option>
-                <option value="bank">Bank Transfer</option>
-                <option value="creditCard">Credit Card</option>
-            </select>
-        </label>
+        <!-- Payment Method Selection -->
+        <h3>Select Payment Method:</h3>
+        <select name="paymentType" id="paymentType" onchange="showPaymentDetails()">
+            <option value="">-- Select Payment Method --</option>
+            <option value="cash">Cash</option>
+            <option value="bank">Bank Transfer</option>
+            <option value="creditCard">Credit Card</option>
+        </select>
+
+        <!-- Payment Details Sections -->
         <div id="cashDetails" class="details-section">
-            <h3>Cash Payment Details</h3>
+            <h4>Cash Payment</h4>
             <p>Payment will be made in cash upon delivery.</p>
         </div>
-        <!-- Bank Transfer Details -->
         <div id="bankDetails" class="details-section">
-            <h3>Bank Transfer Details</h3>
+            <h4>Bank Transfer Details</h4>
             <label for="bankName">Bank Name:</label>
             <input type="text" id="bankName" name="bankName" placeholder="Enter bank name" />
-
             <label for="accountNumber">Account Number:</label>
             <input type="text" id="accountNumber" name="accountNumber" placeholder="Enter account number" />
-
-            <p>Transaction Fee: $5.00</p>
         </div>
-
-        <!-- Credit Card Details -->
         <div id="creditCardDetails" class="details-section">
-            <h3>Credit Card Details</h3>
+            <h4>Credit Card Details</h4>
             <label for="cardNumber">Card Number:</label>
             <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter card number" />
-
             <label for="cardHolderName">Card Holder Name:</label>
             <input type="text" id="cardHolderName" name="cardHolderName" placeholder="Enter card holder name" />
-
             <label for="expiryDate">Expiry Date:</label>
             <input type="month" id="expiryDate" name="expiryDate" />
-
             <label for="cvv">CVV:</label>
             <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" maxlength="3" />
         </div>
 
-    </div>
+        <!-- Shipment Method Selection -->
+        <h3>Select Shipment Method:</h3>
+        <select name="shipmentType" id="shipmentType" onchange="showShipmentDetails()">
+            <option value="">-- Select Shipment Method --</option>
+            <option value="shipRegular">Regular Shipping</option>
+            <option value="shipFast">Fast Shipping</option>
+            <option value="drone">Drone Delivery</option>
+        </select>
 
-    <!-- Shipment Options -->
-    <div class="shipment-section">
-        <h2>Shipment Method</h2>
-        <label>
-            <select name="shipmentMethod" onchange="showShipmentDetails()">
-                <option value="">-- Select Shipment Method --</option>
-                <option value="shipFast">Fast Shipping</option>
-                <option value="shipRegular">Regular Shipping</option>
-                <option value="drone">Drone Delivery</option>
-            </select>
-        </label>
-        <div id="shipFastDetails" class="details-section">
-            <h3>Fast Shipping Details</h3>
-            <p>Express Fee: $10.00</p>
-            <p>Expected Delivery: Within 2 Days</p>
-        </div>
+        <!-- Shipment Details Sections -->
         <div id="shipRegularDetails" class="details-section">
-            <h3>Regular Shipping Details</h3>
-            <p>Standard Fee: $5.00</p>
-            <p>Expected Delivery: 5-7 Days</p>
+            <h4>Regular Shipping</h4>
+            <p>Standard shipping within 5-7 business days.</p>
+        </div>
+        <div id="shipFastDetails" class="details-section">
+            <h4>Fast Shipping</h4>
+            <p>Express shipping within 1-2 business days. Additional fees apply.</p>
         </div>
         <div id="droneDetails" class="details-section">
-            <h3>Drone Delivery Details</h3>
-            <p>Weight Limit: 5kg</p>
-            <p>Distance Limit: 20km</p>
+            <h4>Drone Delivery</h4>
+            <p>Drone delivery available for lightweight items within 20 km radius.</p>
         </div>
-    </div>
 
-    <!-- Order Summary -->
-    <div class="order-summary">
-        <p>Total Quantity: <span>0</span></p>
-        <p>Total Price: $<span>0.00</span></p>
-    </div>
+        <!-- Optional: Other fields -->
+        <input type="hidden" th:field="*{shipmentId}" />
+        <input type="hidden" th:field="*{paymentId}" />
+        <input type="hidden" th:field="*{status}" />
+        <input type="hidden" th:field="*{shippingAddress}" />
+        <input type="hidden" th:field="*{totalAmount}" />
+        <input type="hidden" th:field="*{totalPrice}" />
 
-    <!-- Action Buttons -->
-    <div class="order-actions">
-        <button class="button place-order" onclick="placeOrder()">Place Order</button>
-        <button class="button cancel-order" onclick="cancelOrder()">Cancel</button>
-    </div>
+        <button type="submit">Submit Order</button>
+    </form>
+
 </section>
+
 
 <footer class="footer">
     <div class="footer-content">
@@ -154,104 +147,34 @@
 
 <script>
     function showPaymentDetails() {
-        // Hide all payment details
         document.getElementById("cashDetails").style.display = "none";
         document.getElementById("bankDetails").style.display = "none";
         document.getElementById("creditCardDetails").style.display = "none";
 
-        // Show the selected payment details
-        const paymentMethod = document.querySelector('select[name="paymentMethod"]').value;
-        if (paymentMethod === "cash") {
+        const paymentType = document.getElementById("paymentType").value;
+        if (paymentType === "cash") {
             document.getElementById("cashDetails").style.display = "block";
-        } else if (paymentMethod === "bank") {
+        } else if (paymentType === "bank") {
             document.getElementById("bankDetails").style.display = "block";
-        } else if (paymentMethod === "creditCard") {
+        } else if (paymentType === "creditCard") {
             document.getElementById("creditCardDetails").style.display = "block";
         }
     }
 
     function showShipmentDetails() {
-        // Hide all shipment details
-        document.getElementById("shipFastDetails").style.display = "none";
         document.getElementById("shipRegularDetails").style.display = "none";
+        document.getElementById("shipFastDetails").style.display = "none";
         document.getElementById("droneDetails").style.display = "none";
 
-        // Show the selected shipment details
-        const shipmentMethod = document.querySelector('select[name="shipmentMethod"]').value;
-        if (shipmentMethod === "shipFast") {
-            document.getElementById("shipFastDetails").style.display = "block";
-        } else if (shipmentMethod === "shipRegular") {
+        const shipmentType = document.getElementById("shipmentType").value;
+        if (shipmentType === "shipRegular") {
             document.getElementById("shipRegularDetails").style.display = "block";
-        } else if (shipmentMethod === "drone") {
+        } else if (shipmentType === "shipFast") {
+            document.getElementById("shipFastDetails").style.display = "block";
+        } else if (shipmentType === "drone") {
             document.getElementById("droneDetails").style.display = "block";
         }
     }
-
-    function placeOrder() {
-        // Gather order details
-        const paymentMethod = document.querySelector('select[name="paymentMethod"]').value;
-        const shipmentMethod = document.querySelector('select[name="shipmentMethod"]').value;
-
-        // Create an order object with relevant details
-        const orderDetails = {
-            items: [
-                {
-                    productName: "Product Name", // Example product name
-                    quantity: 1,
-                    price: 0.00,
-                    total: 0.00
-                }
-            ],
-            totalQuantity: 1, // Adjust as needed based on actual quantity
-            totalPrice: 0.00, // Adjust as needed based on actual total price
-            paymentMethod: paymentMethod,
-            shipmentMethod: shipmentMethod,
-            shippingAddress: "123 Example Street", // Update with the actual shipping address
-            date: new Date().toISOString(), // Current date in ISO format
-            status: "Pending" // Default status
-        };
-
-        // Send a POST request to the /orders/place endpoint
-        fetch('/orders/place', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderDetails)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message); // Display success message
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error("Error placing order:", error);
-                alert("An error occurred while placing the order.");
-            });
-    }
-
-    function cancelOrder() {
-        // Simulate fetching an order ID (this should be replaced with actual order ID logic)
-        const orderId = 1; // Example order ID
-
-        // Send a POST request to the /orders/cancel/{orderId} endpoint
-        fetch(`/orders/cancel/${orderId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message); // Display success message
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error("Error canceling order:", error);
-                alert("An error occurred while canceling the order.");
-            });
-    }
-
 </script>
 </body>
 </html>

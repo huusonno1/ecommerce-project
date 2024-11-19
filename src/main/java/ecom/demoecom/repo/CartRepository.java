@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT c FROM Cart c WHERE c.user.id = :id")
     Cart findByUserId(Long id);
+    @Query("SELECT c FROM Cart c WHERE c.user.id = :id AND c.status = :status")
+    Cart findByUserIdAndStatus(Long id, String status);
 }

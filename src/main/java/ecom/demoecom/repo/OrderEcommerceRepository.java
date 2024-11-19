@@ -9,4 +9,6 @@ public interface OrderEcommerceRepository extends JpaRepository<OrderEcommerce, 
     OrderEcommerce findByUserAndCart(Long userId, Long cartId);
     @Query("SELECT o FROM OrderEcommerce o WHERE o.cart.id = :cartId")
     OrderEcommerce findByCartId(Long cartId);
+    @Query("SELECT o FROM OrderEcommerce o WHERE o.user.id = :userId AND o.cart.id = :cartId")
+    OrderEcommerce findByUserIdAndCartId(Long userId, Long cartId);
 }

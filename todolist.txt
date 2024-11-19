@@ -3,8 +3,11 @@ cần gen html của:
 	+, đăng nhập, đăng ký done
 	+, list-item (nên có lọc theo các danh sách, thêm giỏ hàng, ..) done 
 	+, cart (giao diện của giỏ hàng, có chức năng thêm số lượng, xóa số lượng) cần bổ sung chức năng
-	+, checkout (done html thuần)
+	+, checkout (cần chỉnh thêm add shipmentId, paymentId)
 	(Order, hiển thị list item trong cart các method payment, method shipment,.. confirm checkout or hủy checkout) 
 	+, 1 giao diện admin
 	(add item theo laptop, clothes,.., mỗi loại hiển thị 1 list attributes riêng giống như method payment) done
 
+	+, làm cho staff
+		+, get list order 
+		+, update status order
