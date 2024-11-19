@@ -48,7 +48,7 @@
             <tbody>
             <!-- Loop through each item in the cart -->
             <tr th:each="item : ${cart.items}">
-                <td><img th:src="@{/img/{image}(image=${item.image})}" alt="Product Image" class="product-image"></td>
+                <td><img th:src="@{/uploads/{image}(image=${item.image})}" alt="Product Image" class="product-image"></td>
                 <td class="product-name" th:text="${item.name}">Product Name</td>
                 <td class="product-price" th:text="${item.price}">Price</td>
                 <td>

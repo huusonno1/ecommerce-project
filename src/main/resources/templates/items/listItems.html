@@ -40,7 +40,7 @@
                 <li th:each="item : ${items}">
                     <!-- Display Book Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Book)}">
-                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Book Image" style="width: 100px; height: auto;">
+                        <img th:src="@{/uploads/{image}(image=${item.image})}" alt="Book Image" style="width: 100px; height: auto;">
                         <strong>Book:</strong>
                         <span th:text="${item.name}"></span> -
                         <span th:text="'Author: ' + ${item.author}"></span> -
@@ -52,7 +52,7 @@
 
                     <!-- Display Laptop Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Laptop)}">
-                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Laptop Image" style="width: 100px; height: auto;">
+                        <img th:src="@{/uploads/{image}(image=${item.image})}" alt="Laptop Image" style="width: 100px; height: auto;">
                         <strong>Laptop:</strong>
                         <span th:text="${item.name}"></span> -
                         <span th:text="'Producer: ' + ${item.laptopProducer}"></span> -
@@ -63,7 +63,7 @@
 
                     <!-- Display Clothes Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Clothes)}">
-                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Clothes Image" style="width: 100px; height: auto;">
+                        <img th:src="@{/uploads/{image}(image=${item.image})}" alt="Clothes Image" style="width: 100px; height: auto;">
                         <strong>Clothes:</strong>
                         <span th:text="${item.name}"></span> -
                         <span th:text="'Type: ' + ${item.clothesType}"></span> -
@@ -75,7 +75,7 @@
 
                     <!-- Display Shoes Product -->
                     <div th:if="${item instanceof T(ecom.demoecom.entity.Shoes)}">
-                        <img th:src="@{/img/{image}(image=${item.image})}" alt="Shoes Image" style="width: 100px; height: auto;">
+                        <img th:src="@{/uploads/{image}(image=${item.image})}" alt="Shoes Image" style="width: 100px; height: auto;">
                         <strong>Shoes:</strong>
                         <span th:text="${item.name}"></span> -
                         <span th:text="'Type: ' + ${item.shoesType}"></span> -

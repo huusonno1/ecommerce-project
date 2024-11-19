@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #444;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .main-content {
+            margin-left: 20%;
+            padding: 20px;
+        }
+        .manage-items {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Admin Dashboard
+</div>
+
+<div class="sidebar">
+    <a href="#dashboard">Dashboard</a>
+    <a href="#manage-items">Manage Items</a>
+    <a href="#users">Manage Users</a>
+    <a href="#reports">Reports</a>
+    <a href="#settings">Settings</a>
+    <a href="#logout">Logout</a>
+</div>
+
+<div class="main-content">
+    <h2>Dashboard</h2>
+
+    <div class="manage-items">
+        <h1>Add New Item</h1>
+        <label for="category">Select Category:</label>
+        <select id="category" onchange="showFormSection()">
+            <option value="">--Select Category--</option>
+            <option value="laptop-form">Laptop</option>
+            <option value="book-form">Book</option>
+            <option value="shoes-form">Shoes</option>
+            <option value="clothes-form">Clothes</option>
+        </select>
+
+        <!-- Laptop Form -->
+        <div id="laptop-form" class="form-section">
+            <h2>Laptop Details</h2>
+            <label for="laptop-name">Name:</label>
+            <input type="text" id="laptop-name" name="name"><br><br>
+            <label for="laptop-image">Image:</label>
+            <input type="file" id="laptop-image" name="image"><br><br>
+            <label for="laptop-price">Price:</label>
+            <input type="number" id="laptop-price" name="price"><br><br>
+            <label for="laptop-quantity">Quantity:</label>
+            <input type="number" id="laptop-quantity" name="quantity"><br><br>
+            <label for="laptop-description">Description:</label>
+            <textarea id="laptop-description" name="description"></textarea><br><br>
+            <label for="laptop-producer">Producer:</label>
+            <input type="text" id="laptop-producer" name="laptopProducer"><br><br>
+            <label for="laptop-type">Type:</label>
+            <input type="text" id="laptop-type" name="laptopType"><br><br>
+            <button class="add-item" onclick="addItem('Laptop')">Add Item</button>
+        </div>
+
+        <!-- Book Form -->
+        <div id="book-form" class="form-section">
+            <h2>Book Details</h2>
+            <label for="book-name">Name:</label>
+            <input type="text" id="book-name" name="name"><br><br>
+            <label for="book-image">Image:</label>
+            <input type="file" id="book-image" name="image"><br><br>
+            <label for="book-price">Price:</label>
+            <input type="number" id="book-price" name="price"><br><br>
+            <label for="book-quantity">Quantity:</label>
+            <input type="number" id="book-quantity" name="quantity"><br><br>
+            <label for="book-description">Description:</label>
+            <textarea id="book-description" name="description"></textarea><br><br>
+            <label for="book-type">Book Type:</label>
+            <input type="text" id="book-type" name="bookType"><br><br>
+            <label for="book-author">Author:</label>
+            <input type="text" id="book-author" name="author"><br><br>
+            <label for="book-publisher">Publisher:</label>
+            <input type="text" id="book-publisher" name="publisher"><br><br>
+            <button class="add-item" onclick="addItem('Book')">Add Item</button>
+        </div>
+
+        <!-- Shoes Form -->
+        <div id="shoes-form" class="form-section">
+            <h2>Shoes Details</h2>
+            <label for="shoes-name">Name:</label>
+            <input type="text" id="shoes-name" name="name"><br><br>
+            <label for="shoes-image">Image:</label>
+            <input type="file" id="shoes-image" name="image"><br><br>
+            <label for="shoes-price">Price:</label>
+            <input type="number" id="shoes-price" name="price"><br><br>
+            <label for="shoes-quantity">Quantity:</label>
+            <input type="number" id="shoes-quantity" name="quantity"><br><br>
+            <label for="shoes-description">Description:</label>
+            <textarea id="shoes-description" name="description"></textarea><br><br>
+            <label for="shoes-type">Shoes Type:</label>
+            <input type="text" id="shoes-type" name="shoesType"><br><br>
+            <label for="shoes-producer">Producer:</label>
+            <input type="text" id="shoes-producer" name="shoesProducer"><br><br>
+            <label for="shoes-size">Size:</label>
+            <input type="text" id="shoes-size" name="shoesSize"><br><br>
+            <button class="add-item" onclick="addItem('Shoes')">Add Item</button>
+        </div>
+
+        <!-- Clothes Form -->
+        <div id="clothes-form" class="form-section">
+            <h2>Clothes Details</h2>
+            <label for="clothes-name">Name:</label>
+            <input type="text" id="clothes-name" name="name"><br><br>
+            <label for="clothes-image">Image:</label>
+            <input type="file" id="clothes-image" name="image"><br><br>
+            <label for="clothes-price">Price:</label>
+            <input type="number" id="clothes-price" name="price"><br><br>
+            <label for="clothes-quantity">Quantity:</label>
+            <input type="number" id="clothes-quantity" name="quantity"><br><br>
+            <label for="clothes-description">Description:</label>
+            <textarea id="clothes-description" name="description"></textarea><br><br>
+            <label for="clothes-type">Clothes Type:</label>
+            <input type="text" id="clothes-type" name="clothesType"><br><br>
+            <label for="clothes-producer">Producer:</label>
+            <input type="text" id="clothes-producer" name="clothesProducer"><br><br>
+            <label for="clothes-size">Size:</label>
+            <input type="text" id="clothes-size" name="clothesSize"><br><br>
+            <button class="add-item" onclick="addItem('Clothes')">Add Item</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    &copy; 2024 Admin Dashboard. All rights reserved.
+</div>
+
+<script>
+    function showFormSection() {
+        const selectedCategory = document.getElementById("category").value;
+        const forms = document.getElementsByClassName("form-section");
+
+        // Hide all forms
+        for (let i = 0; i < forms.length; i++) {
+            forms[i].style.display = "none";
+        }
+
+        // Show the selected form
+        if (selectedCategory) {
+            document.getElementById(selectedCategory).style.display = "block";
+        }
+    }
+
+    function addItem(category) {
+        // Create a FormData object to collect form data
+        const formData = new FormData();
+        formData.append("category", category);
+
+        if (category === 'Laptop') {
+            formData.append("name", document.getElementById('laptop-name').value);
+            formData.append("price", document.getElementById('laptop-price').value);
+            formData.append("quantity", document.getElementById('laptop-quantity').value);
+            formData.append("description", document.getElementById('laptop-description').value);
+            formData.append("image", document.getElementById('laptop-image').files[0]);
+            formData.append("laptopProducer", document.getElementById('laptop-producer').value);
+            formData.append("laptopType", document.getElementById('laptop-type').value);
+        } else if (category === 'Book') {
+            formData.append("name", document.getElementById('book-name').value);
+            formData.append("price", document.getElementById('book-price').value);
+            formData.append("quantity", document.getElementById('book-quantity').value);
+            formData.append("description", document.getElementById('book-description').value);
+            formData.append("image", document.getElementById('book-image').files[0]);
+            formData.append("bookType", document.getElementById('book-type').value);
+            formData.append("author", document.getElementById('book-author').value);
+            formData.append("publisher", document.getElementById('book-publisher').value);
+        } else if (category === 'Shoes') {
+            formData.append("name", document.getElementById('shoes-name').value);
+            formData.append("price", document.getElementById('shoes-price').value);
+            formData.append("quantity", document.getElementById('shoes-quantity').value);
+            formData.append("description", document.getElementById('shoes-description').value);
+            formData.append("image", document.getElementById('shoes-image').files[0]);
+            formData.append("shoesType", document.getElementById('shoes-type').value);
+            formData.append("shoesProducer", document.getElementById('shoes-producer').value);
+            formData.append("shoesSize", document.getElementById('shoes-size').value);
+        } else if (category === 'Clothes') {
+            formData.append("name", document.getElementById('clothes-name').value);
+            formData.append("price", document.getElementById('clothes-price').value);
+            formData.append("quantity", document.getElementById('clothes-quantity').value);
+            formData.append("description", document.getElementById('clothes-description').value);
+            formData.append("image", document.getElementById('clothes-image').files[0]);
+            formData.append("clothesType", document.getElementById('clothes-type').value);
+            formData.append("clothesProducer", document.getElementById('clothes-producer').value);
+            formData.append("clothesSize", document.getElementById('clothes-size').value);
+        }
+
+        // Send a POST request to the server
+        fetch('/items/add', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text()) // Assuming the server returns a text response
+        .then(data => {
+            alert(`New ${category} item has been added successfully!`);
+            console.log("Server response:", data);
+        })
+        .catch(error => {
+            console.error("Error adding item:", error);
+            alert("An error occurred while adding the item.");
+        });
+    }
+</script>
+</body>
+</html>

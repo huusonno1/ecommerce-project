@@ -1,9 +1,8 @@
 package ecom.demoecom.service.impl;
 
+import ecom.demoecom.dto.OrderRequest;
 import ecom.demoecom.entity.Cart;
 import ecom.demoecom.entity.OrderEcommerce;
-import ecom.demoecom.entity.OrderEcommerce;
-import ecom.demoecom.repo.OrderEcommerceRepository;
 import ecom.demoecom.repo.OrderEcommerceRepository;
 import ecom.demoecom.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +24,26 @@ public class OrderServiceImpl implements OrderService {
         order.setDate(LocalDate.now());
         order.setStatus("Placed");
         return orderRepository.save(order);
+    }
+
+    @Override
+    public OrderEcommerce placeOrder(OrderRequest orderRequest) {
+        OrderEcommerce order = new OrderEcommerce();
+        order.setUser(orderRequest.getUser());
+        order.setCart(orderRequest.getCart());
+        order.setTotalAmount(orderRequest.getTotalAmount());
+        order.setTotalPrice(orderRequest.getTotalPrice());
+        order.setDate(LocalDate.now());
+        order.setShipmentId(orderRequest.getShipmentId());
+        order.setPaymentId(orderRequest.getPaymentId());
+        order.setStatus(orderRequest.getStatus());
+        order.setShippingAddress(orderRequest.getShippingAddress());
+        return orderRepository.save(order);
+
+    }
+
+    @Override
+    public boolean cancelOrder(Long orderId) {
+        return false;
     }
 }

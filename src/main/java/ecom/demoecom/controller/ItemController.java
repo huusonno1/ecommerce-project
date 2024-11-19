@@ -8,8 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ItemController {
@@ -71,6 +77,36 @@ public class ItemController {
         return "items/listItems"; // Tái sử dụng template listItems.html
     }
 
-    // Tương tự, bạn có thể thêm các phương thức cho Laptop, Clothes, Shoes
-    // @GetMapping("/items/laptop")...
+    @PostMapping("items/add")
+    public String addItem(
+            @RequestParam("category") String category,
+            @RequestParam("name") String name,
+            @RequestParam("price") double price,
+            @RequestParam("quantity") int quantity,
+            @RequestParam("description") String description,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            @RequestParam Map<String, String> additionalAttributes,
+            Model model) throws IOException {
+
+        switch (category.toLowerCase()) {
+            case "laptop":
+                itemService.saveLaptop(name, price, quantity, description, image, additionalAttributes.get("laptopProducer"), additionalAttributes.get("laptopType"));
+                break;
+            case "book":
+                itemService.saveBook(name, price, quantity, description, image, additionalAttributes.get("bookType"), additionalAttributes.get("author"), additionalAttributes.get("publisher"));
+                break;
+            case "shoes":
+                itemService.saveShoes(name, price, quantity, description, image, additionalAttributes.get("shoesType"), additionalAttributes.get("shoesProducer"), additionalAttributes.get("shoesSize"));
+                break;
+            case "clothes":
+                itemService.saveClothes(name, price, quantity, description, image, additionalAttributes.get("clothesType"), additionalAttributes.get("clothesProducer"), additionalAttributes.get("clothesSize"));
+                break;
+            default:
+                model.addAttribute("error", "Invalid category provided");
+                return "error";
+        }
+
+        // Return success view
+        return "itemSuccess";
+    }
 }

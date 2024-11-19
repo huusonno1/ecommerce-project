@@ -188,14 +188,70 @@
     }
 
     function placeOrder() {
-        console.log("Order has been placed.");
-        // Logic to send order data to the backend
+        // Gather order details
+        const paymentMethod = document.querySelector('select[name="paymentMethod"]').value;
+        const shipmentMethod = document.querySelector('select[name="shipmentMethod"]').value;
+
+        // Create an order object with relevant details
+        const orderDetails = {
+            items: [
+                {
+                    productName: "Product Name", // Example product name
+                    quantity: 1,
+                    price: 0.00,
+                    total: 0.00
+                }
+            ],
+            totalQuantity: 1, // Adjust as needed based on actual quantity
+            totalPrice: 0.00, // Adjust as needed based on actual total price
+            paymentMethod: paymentMethod,
+            shipmentMethod: shipmentMethod,
+            shippingAddress: "123 Example Street", // Update with the actual shipping address
+            date: new Date().toISOString(), // Current date in ISO format
+            status: "Pending" // Default status
+        };
+
+        // Send a POST request to the /orders/place endpoint
+        fetch('/orders/place', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderDetails)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Display success message
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error("Error placing order:", error);
+                alert("An error occurred while placing the order.");
+            });
     }
 
     function cancelOrder() {
-        console.log("Order has been canceled.");
-        // Logic to handle order cancellation
+        // Simulate fetching an order ID (this should be replaced with actual order ID logic)
+        const orderId = 1; // Example order ID
+
+        // Send a POST request to the /orders/cancel/{orderId} endpoint
+        fetch(`/orders/cancel/${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Display success message
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error("Error canceling order:", error);
+                alert("An error occurred while canceling the order.");
+            });
     }
+
 </script>
 </body>
 </html>
