@@ -6,7 +6,11 @@ import ecom.demoecom.entity.OrderEcommerce;
 import ecom.demoecom.entity.User;
 import org.hibernate.query.Order;
 
+import java.util.List;
+
 public interface OrderService {
+    List<OrderEcommerce> getListOrder();
+
     OrderEcommerce placeOrder(Cart cart);
 
     OrderEcommerce placeOrder(OrderRequest orderRequest);

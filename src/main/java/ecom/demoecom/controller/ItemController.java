@@ -26,6 +26,10 @@ public class ItemController {
     @Autowired
     private CartService cartService;
 
+    @GetMapping("/manage-item")
+    public String manageItem(HttpSession session,Model model) {
+        return "/admin/manageItems";
+    }
     // Lấy danh sách tất cả các Item
     @GetMapping("/items-list")
     public String listItems(HttpSession session,Model model) {

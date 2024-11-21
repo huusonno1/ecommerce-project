@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #444;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .main-content {
+            margin-left: 20%;
+            padding: 20px;
+        }
+        .manage-items {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Admin Dashboard
+</div>
+
+<div class="sidebar">
+    <a href="#dashboard">Dashboard</a>
+    <a th:href="@{/manage-order}">Manage Orders</a>
+    <a th:href="@{/manage-item}">Manage Items</a>
+    <a th:href="@{/manage-user}">Manage Users</a>
+    <a href="#reports">Reports</a>
+    <a href="#settings">Settings</a>
+    <a href="#logout">Logout</a>
+</div>
+
+<div class="main-content">
+
+</div>
+
+<div class="footer">
+    &copy; 2024 Admin Dashboard. All rights reserved.
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

@@ -10,12 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderEcommerceRepository orderRepository;
+
+    @Override
+    public List<OrderEcommerce> getListOrder() {
+        List<OrderEcommerce> orders = orderRepository.findAll();
+        return orders;
+    }
 
     @Override
     public OrderEcommerce placeOrder(Cart cart) {

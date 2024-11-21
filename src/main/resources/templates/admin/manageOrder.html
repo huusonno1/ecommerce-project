@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .sidebar {
+            width: 20%;
+            background-color: #444;
+            color: white;
+            position: fixed;
+            height: 100%;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #575757;
+        }
+        .main-content {
+            margin-left: 20%;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .edit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+        .save-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            display: none; /* Nút Save ban đầu bị ẩn */
+        }
+        .save-btn:hover {
+            background-color: #1e7e34;
+        }
+        .editing .save-btn {
+            display: inline-block; /* Hiển thị khi chỉnh sửa */
+        }
+        .editing .edit-btn {
+            display: none; /* Ẩn nút Edit khi chỉnh sửa */
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    Admin Dashboard
+</div>
+
+<div class="sidebar">
+    <a href="#dashboard">Dashboard</a>
+    <a th:href="@{/manage-order}">Manage Orders</a>
+    <a th:href="@{/manage-item}">Manage Items</a>
+    <a th:href="@{/manage-user}">Manage Users</a>
+    <a href="#reports">Reports</a>
+    <a href="#settings">Settings</a>
+    <a href="#logout">Logout</a>
+</div>
+
+<div class="main-content">
+    <h1>Order List</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Payment ID</th>
+            <th>Shipment ID</th>
+            <th>Shipping Address</th>
+            <th>Status</th>
+            <th>Total Amount</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.date}"></td>
+            <td th:text="${order.paymentId}"></td>
+            <td th:text="${order.shipmentId}"></td>
+            <td th:text="${order.shippingAddress}"></td>
+            <td th:text="${order.status}"></td>
+            <td th:text="${order.totalAmount}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td>
+                <a th:href="@{'/manage-order/edit/' + ${order.id}}" class="edit-btn">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="footer">
+    &copy; 2024 Admin Dashboard. All rights reserved.
+</div>
+
+<script>
+</script>
+
+</body>
+</html>

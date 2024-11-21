@@ -2,7 +2,7 @@ package ecom.demoecom.controller;
 
 import ecom.demoecom.dto.OrderRequest;
 import ecom.demoecom.entity.*;
-import ecom.demoecom.repo.CashRepository;
+import ecom.demoecom.repo.*;
 import ecom.demoecom.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.hibernate.query.Order;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -34,6 +35,67 @@ public class OrderController {
     private PaymentService paymentService;
     @Autowired
     private ShipmentService shipmentService;
+    @Autowired
+    private OrderEcommerceRepository orderEcommerceRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
+    @Autowired
+    private ShipmentRepository shipmentRepository;
+    @Autowired
+    private CartRepository cartRepository;
+
+    @GetMapping("/manage-order")
+    public String manageOrder(HttpSession session,Model model) {
+
+        List<OrderEcommerce> orders = orderService.getListOrder();
+        model.addAttribute("orders", orders);
+        return "/admin/manageOrder";
+    }
+
+    @GetMapping("/manage-order/edit/{orderId}")
+    public String getEditOrderId(@PathVariable Long orderId, Model model) {
+        OrderEcommerce order = orderEcommerceRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + orderId));
+        Payment payment = paymentRepository.findById(order.getPaymentId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + order.getPaymentId()));
+        Shipment shipment = shipmentRepository.findById(order.getShipmentId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + order.getShipmentId()));
+        Cart cart = cartRepository.findById(order.getCart().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + order.getCart().getId()));
+
+        model.addAttribute("order", order);
+        model.addAttribute("cart", cart);
+        model.addAttribute("payment", payment);
+        model.addAttribute("shipment", shipment);
+
+        return "/admin/editOrderId";
+    }
+
+    @PostMapping("/manage-order/update-order/{orderId}")
+    public String updateOrderId(@PathVariable Long orderId,
+                                Model model,
+                                @ModelAttribute("order") OrderEcommerce updatedOrder
+    ) {
+        OrderEcommerce order = orderEcommerceRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid order ID: " + orderId));
+
+        order.setDate(updatedOrder.getDate());
+        order.setPaymentId(updatedOrder.getPaymentId());
+        order.setShipmentId(updatedOrder.getShipmentId());
+        order.setShippingAddress(updatedOrder.getShippingAddress());
+        order.setStatus(updatedOrder.getStatus());
+        order.setTotalAmount(updatedOrder.getTotalAmount());
+        order.setTotalPrice(updatedOrder.getTotalPrice());
+
+
+        // Lưu thay đổi
+        orderEcommerceRepository.save(order);
+
+
+        List<OrderEcommerce> orders = orderService.getListOrder();
+        model.addAttribute("orders", orders);
+        return "/admin/manageOrder";
+    }
 
 
     @PostMapping("/checkout")
