@@ -38,6 +38,8 @@ public class OrderController {
     @Autowired
     private OrderEcommerceRepository orderEcommerceRepository;
     @Autowired
+    private ShippingAddressRepository shippingAddressRepository;
+    @Autowired
     private PaymentRepository paymentRepository;
     @Autowired
     private ShipmentRepository shipmentRepository;
@@ -117,11 +119,11 @@ public class OrderController {
             order = new OrderEcommerce();
             order.setUser(user);
             order.setCart(cart); // Optionally, save the new order
+            orderService.saveOrder(order);
         }
 
 
         order.setStatus("pending");
-        order.setShippingAddress(user.getAddress().getHomeAddress());
         order.setTotalAmount(cart.getTotalQuantity());
         order.setTotalPrice(cart.getTotalPrice());
 
@@ -132,82 +134,116 @@ public class OrderController {
 
 
     @PostMapping("/orders/checkout")
-    public String saveOrder(@ModelAttribute("order") OrderEcommerce order,
-                            @RequestParam String paymentType,
-                            @RequestParam String shipmentType,
-                            @RequestParam(required = false) String bankName,
-                            @RequestParam(required = false) String accountNumber,
-                            @RequestParam(required = false) String cardNumber,
-                            @RequestParam(required = false) String cardHolderName,
-                            @RequestParam(required = false) String expiryDate,
-                            @RequestParam(required = false) String cvv) {
-        // Set additional fields if necessary
+    public String saveOrder(
+            @ModelAttribute("order") OrderEcommerce order,
+            @RequestParam String paymentType,
+            @RequestParam String shipmentType,
+            @RequestParam(required = false) String bankName,
+            @RequestParam(required = false) String accountNumber,
+            @RequestParam(required = false) String cardNumber,
+            @RequestParam(required = false) String cardHolderName,
+            @RequestParam(required = false) String expiryDate,
+            @RequestParam(required = false) String cvv,
+            @RequestParam(required = false) String homeAddress,
+            @RequestParam(required = false) String country,
+            @RequestParam(required = false) String ward,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String district) {
+
+        // Set default values for order
+        setDefaultOrderValues(order);
+
+        // Create and save shipping address
+        ShippingAddress shippingAddress = createShippingAddress(order.getId(), homeAddress, country, ward, city, district);
+        shippingAddressRepository.save(shippingAddress);
+
+        // Create and save payment
+        Payment payment = createPayment(paymentType, bankName, accountNumber, cardNumber, cardHolderName, expiryDate, cvv);
+        paymentService.savePayment(payment);
+
+        // Create and save shipment
+        Shipment shipment = createShipment(shipmentType);
+        shipmentService.saveShipment(shipment);
+
+        // Associate payment and shipment with order
+        order.setPaymentId(payment.getId());
+        order.setShipmentId(shipment.getId());
+
+        order.setShippingAddress(shippingAddress.getHomeAddress());
+        order.setShippingAddressId(shippingAddress.getId());
+        // Save the order
+        orderService.saveOrder(order);
+
+        // Update the current cart and create a new cart for the user
+        handleCartAfterCheckout(order);
+
+        return "redirect:/home";
+    }
+
+    // Helper Methods
+    private void setDefaultOrderValues(OrderEcommerce order) {
         if (order.getDate() == null) {
-            order.setDate(LocalDate.now()); // Set the current date if not already set
+            order.setDate(LocalDate.now());
         }
         if (order.getStatus() == null) {
-            order.setStatus("Pending"); // Set a default status if not already set
+            order.setStatus("Pending");
         }
+    }
 
-        // Create the appropriate Payment subclass based on the selected payment type
-        Payment payment;
+    private ShippingAddress createShippingAddress(Long orderId, String homeAddress, String country, String ward, String city, String district) {
+        ShippingAddress address = new ShippingAddress();
+        address.setOrderId(orderId);
+        address.setHomeAddress(homeAddress);
+        address.setCountry(country);
+        address.setWard(ward);
+        address.setCity(city);
+        address.setDistrict(district);
+        return address;
+    }
+
+    private Payment createPayment(String paymentType, String bankName, String accountNumber, String cardNumber, String cardHolderName, String expiryDate, String cvv) {
         switch (paymentType) {
             case "cash":
-                payment = new Cash();
-                break;
+                return new Cash();
             case "bank":
                 Bank bank = new Bank();
                 bank.setBankName(bankName);
                 bank.setAccountNumber(accountNumber);
-                payment = bank;
-                break;
+                return bank;
             case "creditCard":
                 CreditCard creditCard = new CreditCard();
                 creditCard.setCardNumber(cardNumber);
                 creditCard.setCardHolderName(cardHolderName);
-                creditCard.setExpiryDate(LocalDate.now());
                 creditCard.setCvv(cvv);
-                payment = creditCard;
-                break;
+                return creditCard;
             default:
                 throw new IllegalArgumentException("Invalid payment type: " + paymentType);
         }
-        paymentService.savePayment(payment);
+    }
 
-        // Create the appropriate Shipment subclass based on the selected shipment type
-        Shipment shipment;
+    private Shipment createShipment(String shipmentType) {
         switch (shipmentType) {
             case "shipRegular":
-                shipment = new ShipRegular();
-                break;
+                return new ShipRegular();
             case "shipFast":
-                shipment = new ShipFast();
-                break;
+                return new ShipFast();
             case "drone":
-                shipment = new Drone();
-                break;
+                return new Drone();
             default:
                 throw new IllegalArgumentException("Invalid shipment type: " + shipmentType);
         }
-        shipmentService.saveShipment(shipment);
+    }
 
-        order.setPaymentId(payment.getId());
-        order.setShipmentId(shipment.getId());
-        // Save the order
-        orderService.saveOrder(order);
-
+    private void handleCartAfterCheckout(OrderEcommerce order) {
         Cart currentCart = order.getCart();
-        currentCart.setStatus("Checked Out"); // Update the status
-        cartService.saveCart(currentCart); // Save the updated cart
+        currentCart.setStatus("Checked Out");
+        cartService.saveCart(currentCart);
 
-        // Create a new, empty cart for the user
         Cart newCart = new Cart();
-        newCart.setUser(order.getUser());// Associate the new cart with the same user
-        newCart.setStatus("pending");
+        newCart.setUser(order.getUser());
+        newCart.setStatus("Pending");
         newCart.setLastUpdate(LocalDate.now());
-        cartService.saveNewCart(newCart); // Save the new cart
-
-        return "redirect:/home";
+        cartService.saveNewCart(newCart);
     }
 
 

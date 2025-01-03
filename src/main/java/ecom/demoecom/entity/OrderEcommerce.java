@@ -24,6 +24,7 @@ public class OrderEcommerce {
     private LocalDate date;
     private Long shipmentId;
     private Long paymentId;
+    private Long shippingAddressId;
     private String status;
     private String shippingAddress;
 
