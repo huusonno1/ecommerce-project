@@ -28,4 +28,6 @@ public interface OrderService {
     void saveOrder(OrderEcommerce order);
 
     OrderEcommerce findOrderByUserAndCart(Long id, Long id1);
+
+    List<OrderEcommerce> getOrdersByAccountId(Long accountId);
 }

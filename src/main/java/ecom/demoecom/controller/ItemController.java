@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,9 +26,10 @@ public class ItemController {
 
     @Autowired
     private CartService cartService;
-
     @GetMapping("/manage-item")
     public String manageItem(HttpSession session,Model model) {
+        List<Item> items = itemService.getAllItems();
+        model.addAttribute("items", items);
         return "/admin/manageItems";
     }
     // Lấy danh sách tất cả các Item

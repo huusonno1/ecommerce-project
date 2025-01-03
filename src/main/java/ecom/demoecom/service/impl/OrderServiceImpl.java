@@ -5,6 +5,7 @@ import ecom.demoecom.entity.Cart;
 import ecom.demoecom.entity.OrderEcommerce;
 import ecom.demoecom.entity.User;
 import ecom.demoecom.repo.OrderEcommerceRepository;
+import ecom.demoecom.repo.UserRepository;
 import ecom.demoecom.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderEcommerceRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<OrderEcommerce> getListOrder() {
@@ -107,5 +110,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderEcommerce findOrderByUserAndCart(Long userId, Long cartId) {
         return orderRepository.findByUserIdAndCartId(userId, cartId);
+    }
+
+    @Override
+    public List<OrderEcommerce> getOrdersByAccountId(Long accountId) {
+        User user = userRepository.getUserByAccountId(accountId);
+        return orderRepository.findAllByUserId(user.getId());
     }
 }

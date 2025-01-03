@@ -5,18 +5,14 @@ import ecom.demoecom.entity.*;
 import ecom.demoecom.repo.*;
 import ecom.demoecom.service.*;
 import jakarta.servlet.http.HttpSession;
-import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class OrderController {
@@ -180,6 +176,45 @@ public class OrderController {
         return "redirect:/home";
     }
 
+
+    @PostMapping("/place")
+    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
+        // Extract details from OrderRequest and place the order
+        OrderEcommerce order = orderService.placeOrder(orderRequest);
+
+        return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
+    }
+
+    @PutMapping("/order/place")
+    public ResponseEntity<String> updatePlaceOrder(@RequestBody OrderRequest orderRequest) {
+        // Extract details from OrderRequest and place the order
+        OrderEcommerce order = orderService.updateOrder(orderRequest);
+
+        return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
+    }
+
+    @PostMapping("/cancel/{orderId}")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
+        boolean isCanceled = orderService.cancelOrder(orderId);
+
+        if (isCanceled) {
+            return ResponseEntity.ok("Order has been canceled successfully!");
+        } else {
+            return ResponseEntity.status(404).body("Order not found.");
+        }
+    }
+
+    @GetMapping("/{accountId}/orders")
+    public String viewOrderHistory(@PathVariable Long accountId, Model model) {
+        // Load orders for the given accountId
+        List<OrderEcommerce> orders = orderService.getOrdersByAccountId(accountId);
+
+        // Add orders to the model for Thymeleaf
+        model.addAttribute("orders", orders);
+
+        // Return the Thymeleaf view name
+        return "historyorder";
+    }
     // Helper Methods
     private void setDefaultOrderValues(OrderEcommerce order) {
         if (order.getDate() == null) {
@@ -244,33 +279,5 @@ public class OrderController {
         newCart.setStatus("Pending");
         newCart.setLastUpdate(LocalDate.now());
         cartService.saveNewCart(newCart);
-    }
-
-
-    @PostMapping("/place")
-    public ResponseEntity<String> placeOrder(@RequestBody OrderRequest orderRequest) {
-        // Extract details from OrderRequest and place the order
-        OrderEcommerce order = orderService.placeOrder(orderRequest);
-
-        return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
-    }
-
-    @PutMapping("/order/place")
-    public ResponseEntity<String> updatePlaceOrder(@RequestBody OrderRequest orderRequest) {
-        // Extract details from OrderRequest and place the order
-        OrderEcommerce order = orderService.updateOrder(orderRequest);
-
-        return ResponseEntity.ok("Order has been placed successfully with ID: " + order.getId());
-    }
-
-    @PostMapping("/cancel/{orderId}")
-    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
-        boolean isCanceled = orderService.cancelOrder(orderId);
-
-        if (isCanceled) {
-            return ResponseEntity.ok("Order has been canceled successfully!");
-        } else {
-            return ResponseEntity.status(404).body("Order not found.");
-        }
     }
 }

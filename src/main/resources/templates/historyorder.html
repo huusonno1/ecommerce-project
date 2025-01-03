@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order History</title>
+    <link rel="stylesheet" href="/css/historyOder.css">
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <i class="fas fa-shopping-bag"></i>
+            Ecommerce
+        </div>
+        <nav>
+            <i class="fas fa-user"></i>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <h1>Welcome to History Order</h1>
+</section>
+
+
+<section>
+    <table>
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Address</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.date}"></td>
+            <td th:text="${order.status}"></td>
+            <td th:text="${order.totalPrice}"></td>
+            <td th:text="${order.shippingAddress}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>10k+</h3>
+                <p>Happy Customers</p>
+            </div>
+            <div class="stat-item">
+                <h3>5k+</h3>
+                <p>Products</p>
+            </div>
+            <div class="stat-item">
+                <h3>99%</h3>
+                <p>Satisfaction Rate</p>
+            </div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Customer Support</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <p>&copy; 2024 Ecommerce Shop. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -41,7 +41,7 @@
         </a>
 
         <!-- Thẻ hành động dẫn đến trang đặt hàng -->
-        <a th:href="@{/orders}" class="action-card">
+        <a th:href="@{/{accountId}/orders(accountId=${session.accountId})}" class="action-card">
             <i class="fas fa-box"></i>
             <h3>Orders</h3>
             <p>Track your orders and view history</p>
