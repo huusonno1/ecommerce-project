@@ -13,6 +13,8 @@ public abstract class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long orderId;
+    private Long cartId;
+    private Long shipmentId;
     private String paymentMethod;
     private Date paymentDate;
     private String status;
